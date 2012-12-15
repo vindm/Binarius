@@ -1,0 +1,256 @@
+var oborotni = {
+	rus: [
+		'А','В','Е','К','М','Н','О','Р','С','Т','Х',
+		'а','е','о','р','с','у','х'
+	],
+	eng: [
+		'A','B','E','K','M','H','O','P','C','T','X',
+		'a','e','o','p','c','y','x'
+	],
+	str:'',
+	found:[],
+	bin:[],
+	
+	/*---------- Кодируем инпут -----------*/
+	getBin: function(spaces) {
+		var VResult = $('#input').val();
+		var spaces = $('#spaces:checked').val();
+		if (spaces!=='ye') {
+			var VRegExp = new RegExp(/(\s|\u00A0)/g); 
+			VResult = VResult.replace(VRegExp, '');
+		} 
+		$.get(
+			'test.php',
+			{ 'data' : VResult },
+			function(data) {
+				oborotni.bin=[];
+				$('#inres .size').html('');
+				$.each(data, function(i, v) {
+					$.each(v, function(i,va) {
+						$('#inres .size').html( $('#inres .size').html()+va+' ' );
+						oborotni.bin.push(va.split(''));
+					});
+				});
+				$('#byteCount').text(oborotni.bin.length*8);	
+				oborotni.checkSize('in');						
+			}, 
+			'json'
+		);
+	},
+	
+	/*---------- Ищем оборотней -----------*/
+	findOb: function () {
+		var ind = 0, i=0, val, str =this.str, str_arr=str.split('');
+		while(ind>=0) {
+			ind = str.search('/|'+this.rus.join('|')+'|'+this.eng.join('|')+'|/');		
+			if (ind>-1){
+				i++;
+				val=0;
+				val = i==1? ind: this.found[i-2]['ind']+ind+1;
+				this.found.push( { 'val': str.charAt(ind), 'ind': (val) } );
+				str_arr[val]='<span class="ob">'+str_arr[val]+'</span>';
+				str=str.substr(ind+1);
+			}
+			else return str_arr.join('');			
+		}
+	},
+	
+	/*---------- Кодируем оборотней -----------*/
+	changeOb: function(){
+		var lang=$('#lang').val(), lang1, lang2;
+		if(lang=='eng'){
+			lang1=oborotni.rus;
+			lang2=oborotni.eng;
+		} else {
+			lang1=oborotni.eng;
+			lang2=oborotni.rus;
+		}
+		var str = oborotni.str.split(''), t =0;
+		$.each(oborotni.bin, function(i, v) {
+			$.each(v, function(ind, val) {
+				var n = $('#outres .size span.ob').eq(ind+i*8);
+				var old;
+				if (val==1) {
+					t++					
+					old = lang1.join('').indexOf(n.html());					
+					old>(-1)? n.addClass('one').html(lang2[old]): n.addClass('one');
+					n.attr('v', n.html()); 											
+				} else if(val==0) {
+					old = lang2.join('').indexOf(n.html());					
+					old>(-1)? n.addClass('nul').html(lang1[old]): n.addClass('nul');
+					n.attr('v', n.html()); 
+					t++;		
+				}
+			});
+		});
+		return t;	
+	},
+	
+	/*---------- Переключаем подсказки -----------*/
+	tips: {
+		check: function($obj){
+			var $tips = $obj.parents('.left').next('.tips');
+			if($obj.val()=='') {
+				oborotni.tips.change($tips, 'info');
+				return false;
+			} else {
+				oborotni.tips.change($tips, 'full');
+				return true;
+			}
+		},
+		change: function($tips, cl) {
+			var act=$tips.find('.tip.act');
+			if (act.hasClass(cl)) {
+				return;
+			} else {
+				act.removeClass('act');
+				$tips.find('.'+cl).addClass('act');				
+			} 
+		}
+	},
+	
+	/*---------- Проверяем size -----------*/
+	checkSize: function(what) {
+		var $put=$('#'+what+'put'), 
+			 $res=$('#'+what+'res');
+		if($res.find('.size').height()>$put.height()) {
+			$res.addClass('scroll-y');
+			$put.addClass('scroll-y');
+		} else {
+			$res.removeClass('scroll-y');
+			$put.removeClass('scroll-y');
+		}
+	},
+	/*---------- Переключаем псевдо-textarea -----------*/
+	inp_tog: function(what, dir){
+		var $put=$('#'+what+'put'), 
+			 $res=$('#'+what+'res');
+		if (dir == 1) {
+			$res.addClass('vis');
+			$put.removeClass('vis');
+		} else {
+			$put.addClass('vis');
+			$res.removeClass('vis');
+		}
+	},
+	
+	/*---------- Мигаем красным -----------*/
+	redAlert: function(what) {
+		what.addClass('red');
+		setTimeout(function() {
+			what.removeClass('red');
+		}, '1000');
+	},
+	
+	/*---------- Переключаем байты -----------*/
+	bytes: {
+		sh: function() {
+			var elem = $('#byteCount');
+			if(elem.text()=='0') {
+				oborotni.redAlert(elem);
+			} else {
+				oborotni.inp_tog('in', 1)
+				$('#binar .but').addClass('act').text('Скрыть');
+			}
+		},
+		hi: function() {
+			oborotni.inp_tog('in', 0)
+			$('#binar .but').removeClass('act').text('Показать');
+		}
+	},
+	
+	/*---------- Переключаем оборотней -----------*/
+	obs: {
+		sh: function() {
+			var elem = $('#obCount');
+			if(elem.text()=='0') {
+				oborotni.redAlert(elem);
+			} else {
+				$('.ob').addClass('b');
+				oborotni.inp_tog('out', 1)
+				$('#obor .but').addClass('act').text('Скрыть');
+			}
+		},
+		hi: function() {
+			$('.ob:not(".nul, .one")').removeClass('b');
+			if(!$('#trobor .but').hasClass('act')) {
+				oborotni.inp_tog('out', 0)
+			}
+			$('#obor .but').removeClass('act').text('Показать');
+		}
+	}, 
+	
+	/*---------- Переключаем закодированные оборотни -----------*/
+	transObs: {
+		sh: function() {
+			var elem = $('#trObCount');
+			if(elem.text()=='0') {
+				oborotni.redAlert(elem);
+			} else {
+				$('span.one').html('1').addClass('b');
+				$('span.nul').html('0').addClass('b');
+				oborotni.inp_tog('out', 1)
+				$('#trobor .but').addClass('act').text('Скрыть');
+			}
+		}, 
+		hi: function() {
+			$.each($('#outres .nul, #outres  .one'), function() {
+				$(this).html($(this).attr('v'));				
+			});
+			if(!$('#obor .but').hasClass('act')) {
+				oborotni.inp_tog('out', 0)
+			}
+			$('#trobor .but').removeClass('act').text('Показать');
+		}
+	},
+	
+	/*---------- Финальная проверка -----------*/
+	finCheck: function() {
+		var $bits = $('#byteCount'), $obs = $('#obCount');
+		if ($bits.text()=='0') {
+			oborotni.redAlert($bits);
+			return;
+		} else if(parseInt($obs.text())<parseInt($bits.text())) {
+			oborotni.redAlert($obs);
+			return;
+		} else {
+			oborotni.changeOb();
+			$('#output').val($('#outres .size').text().replace(/([^>])\n/g, '$1<br/>'));
+			$('#trObCount').html(oborotni.changeOb());
+		}
+	}
+	
+};
+
+$(function() {	
+	$('#spaces').bind('change', oborotni.getBin);
+	$('#test').bind('click', oborotni.finCheck);
+	$('#binar .but').click(function() {
+		$(this).hasClass('act')? oborotni.bytes.hi(): oborotni.bytes.sh();
+	});
+	$('#obor .but').click(function() {
+		$(this).hasClass('act')? oborotni.obs.hi(): oborotni.obs.sh();
+	});
+	$('#trobor .but').click(function() {
+		$(this).hasClass('act')? oborotni.transObs.hi(): oborotni.transObs.sh();
+	});
+	$('#input').bind('change keyup', function() {			
+		oborotni.tips.check($(this))? oborotni.getBin(): '';
+		
+	});
+	$('#output').bind('change keyup', function() {		
+		if(oborotni.tips.check($(this))) {	
+			oborotni.str=$(this).val();
+			oborotni.found=[];
+			$('#outres .size').html(oborotni.findOb().replace(/([^>])\n/g, '$1<br/>'));
+			$('#obCount').text(oborotni.found.length);
+			oborotni.checkSize('out');
+		}
+	}).focus(function() {
+		oborotni.obs.hi();
+		oborotni.transObs.hi();
+	});
+	$('#outres').click(function() {
+		$('#output').trigger('focus');
+	})
+})

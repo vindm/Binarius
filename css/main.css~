@@ -1,0 +1,259 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+body, textarea, input, select{
+	font-family: arial, sans-serif;
+	font-size: 13px;
+	color: #454545;
+	letter-spacing: normal;
+}
+.table{
+	display: table;
+	border-spacing: 10px;
+	border-collapse: separate;
+}
+.row{
+	display: table-row;
+	width: 300px;
+	vertical-align: middle;
+}
+.cell{
+	display: table-cell;
+}
+.b{
+	font-weight: bold;
+}
+textarea{
+	background-color: #DCDCC7;
+	padding: 0;
+	outline: 0;
+	border: 0;
+	resize:none;
+	
+}
+textarea:focus{
+	padding: 0;
+	outline: 0;
+	border: 0;
+	resize:none;
+}
+select{
+	font-size: 12px;
+	padding: 3px;
+}
+.w100{
+	width: 100%;
+}
+.w50{
+	width: 50%;
+}
+.h100{
+	height: 100%;
+}
+.side0{
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin-right: 0;
+}
+.bord{
+	border: 1px solid hsla(0, 0%, 18%, 0.5) !important;
+}
+.abs{
+	position: absolute;
+}
+.rel{
+	position: relative;
+}
+.red{
+	color: red;
+}
+
+.input, .but{
+	background-color: #DCDCC7;
+	color: #454545;
+	border: 1px solid hsla(0, 0%, 50%, 0.5);
+}
+.input{
+	box-shadow:  inset 1px 1px 1px hsla(0, 0%, 25%, 0.3),  inset -1px -1px 1px hsla(0, 0%, 25%, 0.3);
+
+}
+.but{
+	color: hsl(0, 0%, 28%);
+	background-image: -webkit-linear-gradient(top,whiteSmoke,hsl(0, 0%, 95%));
+	cursor: pointer;
+	letter-spacing: normal;
+	border-radius: 3px;
+	font-size: 11px;
+	font-weight: bold;
+}
+.but:hover{
+	box-shadow:  1px 1px 1px hsla(0, 0%, 100%, 0.5), -1px -1px 1px hsla(0, 0%, 100%, 0.5);
+}
+#test, #selWrap select{
+	border-radius: 3px;
+	padding: 3px;
+	width: 100%;
+	font-size: 11px;
+}
+#test{
+	padding: 5px;
+	}
+	
+.input, .but, #to,#from{
+	border-radius:5px;
+-moz-border-radius:5px;
+-webkit-border-radius:5px;
+-khtml-border-radius:5px;
+}
+.scroll-y{
+	overflow-y:scroll !important;
+}
+/*------------DOM---------------------------------------------------------------------------------------------*/
+
+body{
+	padding: 20px;
+	padding-right: 30px;
+	background: hsl(0, 0%, 25%);
+	color: #E7E8E9;
+	background: url(bg.jpg) repeat;
+
+}
+hr{
+	border: 1px solid hsla(0, 0%, 70%, 0.3);
+}
+#wrap{
+	
+	min-width: 800px;
+	max-width: 1000px;
+	width: 100%;
+	
+	margin-left: auto;
+	margin-right: auto;
+	
+	
+}
+#to,#from{
+	border: 1px solid hsla(0, 0%, 70%, 0.3);
+	background-color: #1D1F20;
+	padding: 10px 0 10px 10px;
+	box-shadow: 0px 0px 0px hsla(0, 0%, 75%, 0.5), -0px -0px 0px hsla(0, 0%, 75%, 0.5);
+}
+#output, #input{
+	z-index: 2;
+	visibility: hidden;
+	overflow-x: hidden;
+	overflow-y:hidden;
+}
+.vis{
+	visibility: visible !important;
+}
+
+#outres, #inres{
+
+	overflow-x: hidden;
+	overflow-y:hidden;
+	margin: 10px;
+	padding-bottom: 0;
+	z-index: 1;
+	resize:none;
+}
+
+#inpwrap{
+	height:58px;
+	padding-bottom: 10px;
+	margin: 0;
+}
+#input, #inres{
+	height: 48px;
+}
+
+#outwrap, #from_in_wrap{
+	height: 135px;
+	padding-bottom: 10px;
+	margin: 0;
+}
+#output, #outres, #from_inres, #from_input {	
+	height: 125px;
+	visibility: hidden;
+}
+
+.tips{
+	table-layout: fixed;
+	vertical-align: top;
+	width: 280px;
+}
+.tip{
+	width: 100%;
+	table-layout: fixed;
+	display: none;
+}
+#inp .tip.act{
+	display: table;
+}
+#out .tip.act{
+	display: block;
+}
+#out .info p{
+	padding: 10px;
+}
+
+
+.cell.first{
+	font-weight: 700;
+	width: 50%;
+
+}
+.cell.sec{
+	width: 20%;
+	text-align: center;
+	font-size: 15px;
+	font-weight: bold;
+}
+.cell.thi{
+	vertical-align: middle;
+	width: 30%;
+	overflow: hidden;
+	text-align: center;
+	font-size: 12px;
+	padding: 3px 0;
+}
+
+
+.sin{
+	position: relative;
+	border-spacing: 0px;
+
+	width: 260px;
+
+}
+.sin:first-child{
+	padding-bottom: 10px;
+}
+#inp .sin{
+	padding-left: 10px;
+}
+
+#selWrap{
+	text-align: right;
+	padding-left: 10px;
+	width: 50%;
+}
+
+#spaces{
+	margin: 3px 5px 3px 0;
+	font-size: 12px;
+}
+#copy{
+	color: #3D4144;
+	left: 5px;
+	bottom: -0px;
+	height: 20px;
+	width: 25px;
+	text-shadow: -1px -1px 1px black;
+	font-family: Arial black;
+	font-size: 100%;
+	letter-spacing: -4px;
+}
