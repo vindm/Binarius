@@ -31,7 +31,7 @@ var oborotni = {
 			VResult = VResult.replace(VRegExp, '');
 		} 
 		$.post(
-			'test.php',
+			'helper.php',
 			{ 'data' : VResult, 'task':'to' },
 			function(data) {			
 				obj.bin=[];				
@@ -51,56 +51,64 @@ var oborotni = {
 	
 	/*---------- Ищем оборотней -----------*/
 	findOb: function (obj) {
-		var ind = 0, 
-			i=0, 
-			val, 
-			str=obj.str,
-			str_arr=str.split('');
-		while(ind>=0) {
-			ind = str.search('/|'+this.rus.join('|')+'|'+this.eng.join('|')+'|/');		
-			if (ind>-1){
-				i++;
-				val =0;			
-				val = i==1? ind: obj.ww[i-2]['ind']+ind+1;
-				if(obj==show) {				
-					obj.ww.push( { 'val': str.charAt(ind), 'ind': (val) } );
-					str_arr[val]='<span class="ob nul">'+str_arr[val]+'</span>';
+		var ind = 0, i=0, val, chr,
+            str=obj.str, str_arr=str.split(''),
+            isShow = obj == show,
+
+            lang1, lang2,
+            lang=obj.form.find('.lang').val(),
+            all = '/|'+this.rus.join('|')+'|'+this.eng.join('|')+'|/';
+
+        if(lang=='eng'){
+            lang1=this.rus;
+            lang2=this.eng;
+        } else {
+            lang1=this.eng;
+            lang2=this.rus;
+        }
+
+        obj.ww = [];
+		while( ind >= 0 ) {
+			ind = str.search(all);
+			if ( ind > -1 ){
+                chr = str.charAt(ind);
+				val = i==0? ind: obj.ww[i-1]['ind']+ind+1;
+
+                var obs_ind = lang1.join('').indexOf( chr );
+                if ( obs_ind < 0 ) obs_ind = lang2.join('').indexOf( chr );
+                console.log( chr ==="a")
+                if ( isShow ) {
+					obj.ww.push( { 'val': chr, 'ind': val } );
 				} else {
-					var lang1, lang2,
-						lang=obj.form.find('.lang').val();
-					if(lang=='eng'){
-						lang1=this.rus;
-						lang2=this.eng;
-					} else {
-						lang1=this.eng;
-						lang2=this.rus;
-					}
-					var fir = lang1.join('').indexOf(str.charAt(ind));
-					var sec = lang2.join('').indexOf(str.charAt(ind));
-					var chr = fir>(-1)? str.charAt(ind): lang1[sec];
 					obj.ww.push( { 'val': chr, 'ind': (val) } );
-					str_arr[val]='<span class="ob nul">'+chr+'</span>';
+					//str_arr[val]='<span class="ob nul" obs_ind="'+obs_ind+'">'+chr+'</span>';
 				}
-				
+                str_arr[val]='<span class="ob nul" obs_ind="'+obs_ind+'">'+str_arr[val]+'</span>';
+
+                i++;
 				str=str.substr(ind+1);
 				
 			}
-			else return str_arr.join('');			
+			else {
+                return str_arr.join('');
+            }
 		}
 	},
 	
 	/*----------- Проверяем на наличие переключенных оборотней ------------*/
 	checkObsForHide: function(obj, lang) {
-		obj.bin3=[];
-		var t =0;
-		$.each(obj.ww, function(i, v){
-			var span = obj.form.find('.outres .size span.ob').eq(i);
-			if(lang.indexOf(v.val)>-1) {
-				span.removeClass('nul').addClass('one').attr('v', span.html());
+		var obs = obj.form.find('.outres .size span.ob'),
+            t = 0, ob;
+        obj.bin3=[];
+		$.each( obj.ww, function(i, v){
+			ob = obs.eq(i);
+			if(lang.indexOf( v.val ) >-1 ) {
+                console.log(v.val === 'a')
+				ob.removeClass('nul').addClass('one').attr('v', ob.text());
 				obj.bin3.push(1);
-				t++
+				t++;
 			} else {
-				span.attr('v', span.html());
+                ob.attr('v', ob.text());
 				obj.bin3.push(0);
 			}
 		});
@@ -120,8 +128,11 @@ var oborotni = {
 			} else {
 				oborotni.obs.hi(obj);
 				oborotni.transObs.hi(obj);
+
 				oborotni.changeOb(obj);
-				obj.form.find('.output').val(obj.form.find('.outres .size').text().replace(/([^>])\n/g, '$1<br/>')).trigger('change');
+
+				//obj.form.find('.output_field').text( obj.form.find('.outres .size').text().replace(/([^>])\n/g, '$1<br/>') ).trigger('change');
+
 				obj.form.find('.but.act').each(function() {
 					var cl = $(this).parents('tr').attr('class');
 					if(cl == 'obor') {
@@ -150,11 +161,14 @@ var oborotni = {
 				return;
 			} else {
 				$.post(
-					'test.php',
+					'helper.php',
 					{ 'data' : obj.bin3, 'task':'from' },
 					function(data) {
-						obj.form.find('.input_field').val(data).trigger('change');
-						if(data!=='') {							
+                        obj.form.find('.input_field').text('').trigger('change');
+
+						if(data && $.type(data)=='string' && data!='') {
+                            obj.form.find('.input_field').text(data.toString()).trigger('change');
+
 							obj.form.find('.binar').qtip('api').set({
 								'content.text': "Сообщение успешно извлечено!"
 							}).show();
@@ -176,6 +190,7 @@ var oborotni = {
 	/*---------- Кодируем оборотней -----------*/
 	changeOb: function(obj){
 		var lang=obj.form.find('.lang').val(), lang1, lang2;
+        console.log(lang)
 		if(lang=='eng'){
 			lang1=this.rus;
 			lang2=this.eng;
@@ -183,25 +198,30 @@ var oborotni = {
 			lang1=this.eng;
 			lang2=this.rus;
 		}
-		var str = obj.str.split(''), t =0;
+		var t = 0, old, ob,
+            obs= obj.form.find('.outres .size span.ob');
+        $.each(obs, function(i, obo) {
+            $(obo)
+                .removeClass('one real').addClass('nul')
+                .text( lang1[ $(obo).attr('obs_ind') ] );
+        });
 		$.each(obj.bin, function(i, v) {
 			$.each(v, function(ind, val) {
-				var n = obj.form.find('.outres .size span.ob').eq(ind+i*8);
-				var old;
+				ob = obs.eq( ind + i * 8 );
 				if (val==1) {
-					t++					
-					old = lang1.join('').indexOf(n.html());					
-					old>(-1)? n.removeClass('nul').addClass('one').html(lang2[old]): n.addClass('one');
-					n.attr('v', n.html()); 											
-				} else if(val==0) {
-					old = lang2.join('').indexOf(n.html());					
-					old>(-1)? n.html(lang1[old]): n.addClass('nul real');
-					n.attr('v', n.html()); 
-					t++;		
+					ob.removeClass('nul').addClass('one')
+                        .text(lang2[ob.attr('obs_ind')]);
 				}
+                else if(val==0) {
+                    ob.addClass('real');
+				}
+                ob.attr('v', ob.text());
+                t++;
 			});
-		}); 
-		obj.form.find('.output_field').val(obj.form.find('.outres .size').text());
+		});
+        var txt = obj.form.find('.outres .size').html().replace(/([^>])\n/g, '$1<br/>').toString();
+        console.log(txt)
+		obj.form.find('.output_field').val( obj.form.find('.outres .size').text() );
 		return t;	
 	},
 	
@@ -301,7 +321,7 @@ var oborotni = {
 	/*---------- Переключаем оборотней -----------*/
 	obs: {
 		sh: function(obj) {
-			var elem = obj.form.find($('.obCount'));
+			var elem = obj.form.find('.obCount');
 			if(elem.text()=='0') {
 				oborotni.redAlert(elem, 'В контейнере нет оборотней!', true);			
 			} else {
@@ -334,8 +354,8 @@ var oborotni = {
 			if(elem.text()=='0') {
 				oborotni.redAlert(elem, 'В контейнере нет оборотней, скрывающих биты!', true);
 			} else {
-				obj.form.find('.ob.one').html(1).addClass('b');
-				obj.form.find('.ob.nul.real').html(0).addClass('b');
+				obj.form.find('.ob.one').text(1).addClass('b');
+				obj.form.find('.ob.nul.real').text(0).addClass('b');
 				oborotni.inp_tog('out', 1, obj)
 				obj.form.find('.trobor .but')
 					.addClass('act')
@@ -344,7 +364,7 @@ var oborotni = {
 		}, 
 		hi: function(obj) {
 			$.each(obj.form.find('.outres .nul, .outres  .one'), function() {
-				$(this).html($(this).attr('v'));
+				$(this).text($(this).attr('v'));
 				$(this).removeClass('b');				
 			});
 			if(!obj.form.find('.obor .but').hasClass('act')) {
@@ -354,7 +374,7 @@ var oborotni = {
 				.removeClass('act')
 				.parents('tr').qtip('api').set('content.text','Отобразить биты, спрятанные в оборотнях');
 		}
-	},
+	}
 	
 };
 	check_isob = function(lang, ch) {
@@ -367,6 +387,22 @@ var oborotni = {
 		}
 		return isob;
 	}
+    createTbl = function( lang, symbs ) {
+    var $row, obor = false,
+        $table = $('<table/>', { class:"asci_tbl"});
+
+    $.each( symbs, function(ind, symb ) {
+        $row = $('<tr/>');
+        obor = check_isob(lang, symb.char);
+        obor && $row.addClass('ob_ascii').attr('ind_ob', obor);
+        $row.append(
+            $('<td/>').text( symb.char===' '? 'пробел': symb.char ),
+            $('<td/>').text( symb.bin )
+        );
+        $table.append( $row );
+    });
+    return $table;
+}
 	switchEvent = function() {
 		if($('html').hasClass('ie8')){
 			return 'keyup paste';
@@ -417,8 +453,8 @@ $(function() {
 		
 	}
 	$.fn.qtip.defaults.style.classes = 'ui-tooltip-green ui-tooltip-shadow ui-tooltip-rounded';
-	$.fn.qtip.defaults.position.my='left top';
-    $.fn.qtip.defaults.position.at='right middle';
+	$.fn.qtip.defaults.position.my='right top';
+    $.fn.qtip.defaults.position.at='left middle';
     $.fn.qtip.defaults.position.adjust.x=3;
 	$.fn.qtip.defaults.show.delay=0;
 	$.fn.qtip.defaults.hide.delay=0;
@@ -445,7 +481,7 @@ $(function() {
 	$('.spaces').bind('change', function() {							//На чекбокс выключения пробелов
 		oborotni.getBin(oborotni.whatForm($(this)))
 	}).parents('tr').qtip({
-		content: "Оставьте пустым, если хотите спрятать пробелы и переносы строк, вместе с остальными символами. <br><br> Учитывайте, что любой символ занимает 8 бит т.е. 8 оборотней.",
+		content: "Оставьте пустым, если хотите спрятать пробелы и переносы строк, вместе с остальными символами. <br><br> Учитывайте, что любой символ занимает 8 бит т.е. 8 оборотней."
 	});
 	$('.binar .but').click(function() {									//
 		if($(this).hasClass('act')) {
@@ -454,10 +490,10 @@ $(function() {
 			oborotni.bytes.sh(oborotni.whatForm($(this)));			
 		}
 	}).parents('tr').qtip({
-		content: 'Отобразить битовое представление введенных символов.',
+		content: 'Отобразить битовое представление введенных символов.'
 	});
 	$('#from .binar .but').parents('tr').qtip({
-		content: 'Отобразить битовое представление извлеченных символов.',
+		content: 'Отобразить битовое представление извлеченных символов.'
 	});
 	$('#to .lang').bind('change', function() {
 		$('#to .output_field').trigger('change');
@@ -468,7 +504,7 @@ $(function() {
 			} else {
 				return "<b>Русские оборотни</b><br> будут скрывать <b>бит = 1</b>. <br><br><b>Английские оборотни</b><br> будут скрывать <b>бит = 0</b>.";
 			} 
-		},
+		}
 	});
 	$('#from .lang').bind('change', function() {
 		$('#from .output_field').trigger('change');
@@ -479,7 +515,7 @@ $(function() {
 			} else {
 				return "<b>Русские оборотни</b><br> будут преобразованы в <b>бит = 1</b>. <br><br><b>Английские оборотни</b><br> будут преобразованы в <b>бит = 0</b>.";
 			} 
-		},
+		}
 	});
 	$('.output_field').bind(switchEvent()+' change', function(e) {	
 		var stop = false;
@@ -513,7 +549,8 @@ $(function() {
 	$('.outres').click(function() {
 		oborotni.obs.hi(oborotni.whatForm($(this)));
 		oborotni.transObs.hi(oborotni.whatForm($(this)));
-	})
+        $('.output_field').focus()
+	});
 	$('.obor .but').click(function() {
 		if($(this).hasClass('act')) {
 			oborotni.obs.hi(oborotni.whatForm($(this)));			
@@ -521,7 +558,7 @@ $(function() {
 			oborotni.obs.sh(oborotni.whatForm($(this)));			
 		}
 	}).parents('tr').qtip({
-		content: 'Выделить найденные оборотни.',
+		content: 'Выделить найденные оборотни.'
 	});
 	$('.trobor .but').click(function() {
 		if($(this).hasClass('act')) {
@@ -530,7 +567,7 @@ $(function() {
 			oborotni.transObs.sh(oborotni.whatForm($(this)));
 		}
 	}).parents('tr').qtip({
-		content: 'Отобразить биты, спрятанные в оборотнях.',
+		content: 'Отобразить биты, спрятанные в оборотнях.'
 	});
 	
 	$('.test').bind('click', function(){
@@ -553,72 +590,66 @@ $(function() {
 		}
 	});
 	$('#tipTabs').delegate('.tab', 'click', function() {
-		if(!$(this).hasClass('act')){
+		if(!$(this).hasClass('act')) {
 			if($(this).attr('id')=='inform'){
 				$('#ascii_form').hide();
+                $('#ascii_info').hide();
+                $('#obs_info').hide();
 				$('#information').show();
-			}else if($(this).attr('id')=='ascii') {
+			}
+            else if($(this).attr('id')=='ascii') {
 				$('.asci_tbl tr:not(.ob_ascii)').css('display', 'table-row');
 				$('#ascii_form').show();
+                $('#ascii_info').show();
+                $('#obs_info').hide();
 				$('#information').hide();
-			} else {
+			}
+            else {
 				$('.asci_tbl tr:not(.ob_ascii)').css('display', 'none');
 				$('#ascii_form').show();
+                $('#obs_info').show();
+                $('#ascii_info').hide();
 				$('#information').hide();
 			}
 			$('#tipTabs .tab.act').toggleClass('act');
 			$(this).toggleClass('act');
 		}
 	});
-	$.get(
-		'test.php',
-		{'task':'getAsci'},
-		function(data) {
+
+	$.get( 'helper.php', { 'task':'getAsci' },
+		function( data ) { // { rus, eng, other, digs }
+            var tables = [];
 			$.each(data, function(j, v) {
-				big = v.big;
-				sm = v.sm;
-				if (big){
-					$big = $('<table class="asci_tbl">');
-					for(i=0; i<big.length; i++) {
-						isob = check_isob(j, big[i].char);
-						$row = $('<tr>');
-						$td= $('<td>');
-						if (isob!==false) {
-							$row.addClass('ob_ascii').attr('ind_ob', isob);
-						}
-						$td1 = $('<td>').append($('<div>').text(big[i].char));
-						$td2 = $('<td>').append($('<div>').text(big[i].bin));
-						$row.append($td1).append($td2);
-						$big.append($row);
-					}					
-					$sm = $('<table class="asci_tbl">');					
-					for(i=0; i<sm.length; i++) {
-						isob = check_isob(j, sm[i].char);
-						$row = $('<tr>');
-						if (isob!==false) {
-							$row.addClass('ob_ascii').attr('ind_ob', isob);
-						}
-						$td1 = $('<td>').append($('<div>').text(sm[i].char));
-						$td2 = $('<td>').append($('<div>').text(sm[i].bin));
-						$row.append($td1).append($td2);
-						$sm.append($row);
-					}
-					$('#ascii_form').append($('<div class="tbl_wrap">').append($big).append($sm));
-					
+                if ( v.big ) {
+                    tables.push( $('<div class="tbl_wrap">').append(
+                        createTbl( j, v.big ),
+                        createTbl( j, v.sm )
+                    )[0] );
 				} else {
-					$ret = $('<table class="asci_tbl">');
-					for(i=0; i<v.length; i++) {
-						$row = $('<tr>');
-						v[i].char= v[i].char==' '? 'пробел': v[i].char;  
-						$td1 = $('<td>').append($('<div>').text(v[i].char));
-						$td2 = $('<td>').append($('<div>').text(v[i].bin));
-						$row.append($td1).append($td2);
-						$ret.append($row);
-					}
-					$('#ascii_form').append($('<div class="tbl_wrap">').append($ret));
+                    tables.push( $('<div class="tbl_wrap">').append(
+                        createTbl( j, v )
+                    )[0] );
 				}
 			});
+            $('#ascii_form').append(
+                $('<dl/>', { id:'ascii_info'} ).append(
+                    $('<p/>', { class: 'dt' }).text('ASCII'),
+                    $('<p/>', { class: 'dd' }).text('— представляет собой кодировку для представления десятичных цифр, латинского и национального алфавитов, знаков препинания и управляющих символов.')
+                ),
+                $('<dl/>', { id:'obs_info'} ).append(
+                    $('<p/>', { class: 'dt' }).text('Оборотни'),
+                    $('<p/>', { class: 'dd' }).text('— символы, внешне не отличимые человеком, но представленные различными значениями в кодировке ASCII.')
+                ),
+                tables
+            ).append( tables );
 		},
 		'json'
 	);
-})
+    var last = 0;
+    $('#generator').click(function rand() {
+        var cur = Math.round(Math.random()*4 );
+        if ( last == cur ) rand();
+        last = cur;
+        $('#to .output_field').text( texts[ last ]).trigger('change')
+    })
+});

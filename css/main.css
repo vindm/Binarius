@@ -9,17 +9,7 @@ body{
     background: hsl(0, 0%, 25%);
     background: url(img/bg.jpg) repeat;font-family: arial, sans-serif;
     font-size: 13px;
-    color: rgb(160, 157, 144);
-}
-textarea, input, select {
-    color: rgb(0, 111, 133);
-	letter-spacing: normal;
-}
-textarea { resize:none;	}
-textarea:focus { outline: 0; }
-select{
-    text-align: center;
-    padding: 5px;
+    color: rgb(168, 168, 168);
 }
 
 .table {
@@ -36,8 +26,6 @@ select{
 
 .u { text-decoration:underline; }
 .b { font-weight:bold; }
-
-
 .w100 { width: 100%; }
 .w50 { width: 50%; }
 .h100 { height: 100%; }
@@ -54,73 +42,119 @@ select{
 .rel { position: relative; }
 .red{ color: rgb(175, 75, 75); }
 
-.input, .but{
-	color: #454545;
-	border: 1px solid hsla(0, 0%, 50%, 0.5);
+
+textarea, input, select {
+    outline: 0;
+    letter-spacing: normal;
+    color: rgb(168, 168, 168);
+    font-family: arial, sans-serif!important;
+    resize:none;
 }
 
-.input, textarea{
+select{
+    text-align: center;
+    padding: 5px;
+}
+
+.inp .left textarea,
+.inp .left .size, .ob {
+    color: rgb(2, 141, 168)!important;
+}
+
+.input, textarea {
     background:rgb(11, 0, 17);
 }
-.input, .but, .main_form{
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
-    border:1px solid rgba(0, 70, 80, 0.48)
+
+
+.input, .tab, .but, .main_form{
+    border: 1px solid rgba(2, 141, 168, 0.22);
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+         -o-border-radius: 3px;
+            border-radius: 3px;
+}
+
+.but, .tab {
+    cursor: pointer;
+    text-align: center;
+    font-size: 12px;;
+    border: 1px solid  rgba(0, 70, 80, 0.48);
 }
 
 .but{
     padding:5px;
     background-color: #F4F4F4;
     background-image: -webkit-linear-gradient(top,hsl(0, 0%, 97%),hsl(0, 0%, 80%));
-    cursor: pointer;
-    letter-spacing: normal;
     color: #1A1A1A;
     font-weight: bold;
-    text-align: center;
+    letter-spacing: normal;
 }
 .but:hover{
+    box-shadow: inset 0 0px 2px rgb(0, 0, 0);
     background-image: -webkit-linear-gradient(top,hsl(0, 0%, 97%),hsl(0, 0%, 70%));
 }
 .but.act {
--webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
--moz-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
-background: #D9D8D8;
-border: 1px solid #B1B6B9;
-color: #333;
+    box-shadow: inset 0 0px 2px rgb(0, 0, 0);
+    background: rgb(66, 102, 148);
+    color: #333;
 }
 
 button img{
 	margin-top: 2px;
 }
-
+#generator {
+    width: 100%;
+    margin-top: 75px;
+}
 .tab {
+    display: inline-block;
+    padding: 10px 25px;
+
     font-weight: 800;
-    color: rgb(148, 158, 124);
-	display: inline-block;
-	background: url(img/carbon_dark.jpg) !important;
+    text-transform: uppercase;
+    color: rgb(168, 168, 168);
+
+    background: rgb(12, 12, 12);
 	border: 1px solid black;
-	padding: 10px 25px;
 }
 .tab:hover{
-     color: rgb(195, 206, 166);
+     color:rgb(148, 158, 124);
  }
 .tab.act{
+    background: rgb(12, 12, 12);
 	padding: 15px 25px;
-	border: 1px solid  rgba(0, 70, 80, 0.48);
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
 	border-bottom: 0;
-    color: rgb(143, 173, 73);
+    color: rgb(2, 141, 168);
 
 }
 
 .scroll-y{
 	overflow-y:scroll !important;
+    padding-right: 10px;
 }
 /*------------DOM---------------------------------------------------------------------------------------------*/
 
+#wrap{
+
+    min-width: 850px;
+    max-width: 80%;
+
+    margin-left: auto;
+    margin-right: auto;
+
+
+}
+.main_form{
+    display:none;
+    padding: 5px 0 5px 5px;
+    clear:both;
+    background: rgb(12, 12, 12);
+    background-image: -webkit-linear-gradient( top, rgb(12, 12, 12), rgb(15, 15, 15) );
+
+    box-shadow: 0px 0px 0px hsla(0, 0%, 75%, 0.5), -0px -0px 0px hsla(0, 0%, 75%, 0.5);
+}
 
 #formTabs, #tipTabs{
 	height:44px;
@@ -129,9 +163,17 @@ button img{
 .ie9 #formTabs, .ie9 #tipTabs{
 	height: 43px;
 }
-#ascii_form{
-	padding-left:10px;
+
+#ascii_form, #information {
+    padding: 15px;
+    line-height:20px;
 }
+
+.dt {
+    font-weight:bold;
+    color:rgb(2, 141, 168);
+}
+
 #ascii_form .tbl_wrap{
 	display: inline-block;
 	vertical-align:top;
@@ -147,50 +189,24 @@ text-align: center;
 }
 .asci_tbl td:first-child {
 font-weight: bold;
-color:rgb(0, 111, 133);
+    color: rgb(2, 141, 168);
 }
 
-#wrap{
-	
-	min-width: 810px;
-	max-width: 1000px;
-	width: 100%;
-	
-	margin-left: auto;
-	margin-right: auto;
-	
-	
-}
-.main_form{
-	display:none;
-    padding: 5px 0 5px 5px;
-    clear:both;
-	background-color: #1D1F20;
-    background: url(img/carbon_dark.jpg);
-	box-shadow: 0px 0px 0px hsla(0, 0%, 75%, 0.5), -0px -0px 0px hsla(0, 0%, 75%, 0.5);
-}
 
 #to, #information{
 display:block;
 }
-#information{
-padding: 15px;
-line-height:20px;
+
+#information ol {
+    margin: 5px 20px;
 }
 #information li {
 margin-left: 20px;
 }
-#information dt{
-font-weight:bold;
-color:rgb(175, 75, 75);
-}
 #information a{
-	text-decoration: underline;
-	color:white;
-	cursor:pointer;
-	}
-#information ol {
-margin: 5px 20px;
+text-decoration: underline;
+color:white;
+cursor:pointer;
 }
 
 .left{
@@ -225,6 +241,7 @@ margin: 5px 20px;
 }
 .input, .inres{
 	height: 48px;
+    box-shadow: inset 0px 0px 20px black;
 }
 
 .outwrap{
@@ -277,6 +294,7 @@ td.first{
 	width: 55%;
 }
 td.sec{
+    color: rgb(2, 141, 168);
 	width: 25%;
 	text-align: center;
 	font-size: 15px;
