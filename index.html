@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--[if ( lt IE 9) ]> <html class="ie8"> <![endif]-->
+<!--[if IE 9 ]> <html class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html> <!--<![endif]-->
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<title>Binarius</title>
+
+<link href="css/qtip.css" type="text/css" rel="stylesheet"></link>
+<link href="css/main.css" type="text/css" rel="stylesheet"></link>
+
+</head>
+<body>
+
+<div id="wrap" class="rel">
+	<div class="rel">
+
+        <div id="formTabs">
+			<div class="tab but act" id="hideform">Скрываем</div> 
+			<div class="tab but" id="showform">Извлекаем</div>
+		</div>
+
+		<div id="to" class="main_form">
+			<div class="table w100 inp" >	
+				<div class="left cell  rel">
+					<div class="rel input w100s inpwrap">
+						<div class="abs side0" style="padding:10px">
+							<textarea class="w100 rel vis input_field" placeholder="Сообщение"></textarea>
+						</div>
+						<div class="inres abs side0 ">
+							<div class="size"></div>
+						</div>							
+					</div>			
+				</div>		
+				<div class="tips cell ">
+					<div class="tip info err act">
+						<p>Введите текст сообщения, которое будем скрывать в контейнер.</p>				
+					</div>
+					<div class="tip full ok">
+						<table>							
+							<tr class="binar">					
+								<td class="first">Скрываемых битов:</td>
+								<td class="sec byteCount">0</td>
+								<td class="thi">
+									<button type="button" class="but">
+										<img src="css/img/view.png" >
+									</button>
+								</td>
+							</tr>
+							<tr class='clr'><td colspan=3></td></tr>
+							<tr>
+								<td colspan=3>
+									<label>Игнорировать пробелы и переносы <input type="checkbox" class="spaces" value="ye"></label>
+								</td>
+							</tr>
+						</table>
+					</div>						
+				</div>		
+			</div>
+			
+			<div class="table w100 out">	
+				<div class="left cell rel">
+					<div class="rel input outwrap">
+						<div class="abs side0" style="padding:10px">
+							<textarea class="w100 vis output_field" rows="" cols="" placeholder="Контейнер"></textarea>
+						</div>
+						<div class="abs side0 outres">
+							<div class="size"></div>
+						</div>
+					</div>					
+				</div>			
+				<div class="tips cell">
+					<div class="tip info err act">
+						<p>Введите текст, который послужит контейнером для сообщения.</p>
+					</div>
+					<div class="tip full ok" >
+						<table>
+							<tr class="obor">
+								<td class="first">Найдено оборотней: </td>
+								<td class="sec obCount">0</td>
+								<td class="thi">
+									<button type="button" class="but"><img src="css/img/view.png" ></button>
+								</td>
+							</tr>
+							<tr class='clr'></tr>
+							<tr class="trobor">
+								<td class="first">Найдено битов: </td>
+								<td class="sec trObCount">0</td>
+								<td class="thi">
+									<button type="button" class="but"><img src="css/img/view.png" ></button>
+								</td>
+							</tr>
+							<tr class='clr'></tr>
+							<tr>
+								<td class="first">Оборотни = 1:</td> 
+								<td class="selWrap" colspan=2>
+									<select class="but lang">
+										<option value="eng">Английские</option>
+										<option value="rus">Русские</option>									
+									</select>
+								</td>
+							</tr>
+							<tr class='clr'></tr>
+							
+							<tr>
+								<td colspan=3>
+									<button type="button" class="but test">
+										<span>Скрыть</span>
+									</button>
+								</td>
+							</tr>
+						</table>			
+					</div>
+				</div>		
+			</div>
+			
+		</div>	
+		<div id="from" class="main_form">
+		
+		<div class="table w100 out">	
+			<div class="left cell rel">
+				<div class="rel input outwrap">
+					<div class="abs side0" style="padding:10px">
+						<textarea class="w100 vis output_field" rows="" cols=""  placeholder="Контейнер"></textarea>
+					</div>
+					<div class="abs side0 outres">
+						<div class="size"></div>
+					</div>
+				</div>					
+			</div>			
+			<div class="tips cell">
+				<div class="tip info err act">
+					<p>Введите текст-контейнер, содержащий скрытое сообщение.</p>
+				</div>
+				<div class="tip full ok" >
+					<table>
+						<tr class="obor">
+							<td class="first">Найдено оборотней: </td>
+							<td class="sec obCount">0</td>
+							<td class="thi">
+								<button type="button" class="but"><img src="css/img/view.png" ></button>
+							</td>
+						</tr>
+						<tr class='clr'></tr>
+						<tr class="trobor">
+							<td class="first">Найдено скрытых 1: </td>
+							<td class="sec trObCount">0</td>
+							<td class="thi">
+								<button type="button" class="but"><img src="css/img/view.png" ></button>
+							</td>
+						</tr>
+						<tr class='clr'></tr>
+						<tr>
+							<td class="first">Оборотни = 1:</td> 
+							<td class="selWrap" colspan=2>
+								<select class="but lang">
+									<option value="eng">Английские</option>
+									<option value="rus">Русские</option>									
+								</select>
+							</td>
+						</tr>
+						<tr class='clr'></tr>
+						
+						<tr>
+							<td colspan=3>
+								<button type="button" class="but test">
+									<span>Извлечь</span>																
+								</button>
+							</td>
+						</tr>
+					</table>			
+				</div>
+			</div>		
+		</div>
+		
+		<div class="table w100 inp" >	
+			<div class="left cell  rel">
+				<div class="rel input w100s inpwrap">
+					<div class="abs side0" style="padding:10px">
+						<textarea class="w100 rel vis input_field"  placeholder="Сообщение"></textarea>
+					</div>
+					<div class="inres abs side0 ">
+						<div class="size"></div>
+					</div>							
+				</div>			
+			</div>		
+			<div class="tips cell ">
+				<div class="tip info err act">
+					<p>Извлеченное сообщение.</p>				
+				</div>
+				<div class="tip full ok">
+					<table>
+						
+						
+						<tr class="binar">					
+							<td class="first">Извлечено битов:</td>
+							<td class="sec byteCount">0</td>
+							<td class="thi">
+								<button type="button" class="but"><img src="css/img/view.png" ></button>
+							</td>
+						</tr>
+						<tr class='clr'><td colspan=3></td></tr>
+						
+					</table>
+				</div>						
+			</div>		
+		</div>
+		
+	</div>
+	</div>
+	<div class="rel">
+		
+		<div id="tipTabs" align="right">
+			<div class="tab but act fll" id="inform">Справка</div>
+			<div class="tab but" id="ascii">ASCII</div> 
+			<div class="tab but" id="allObs">Оборотни</div>
+		</div>
+		<div id="ascii_form" class="main_form"></div>
+		<div id="information" class="main_form">
+			<dl>
+				<dt>Cтeганoгра́фия</dt>
+					<dd>— нayка о cкрытой передaчe инфopмации путём cоxpaнения в тайнe сaмoгo фaкта передaчи.</dd>
+				<br><dt>Meтoд знaкoв идeнтичнoгo начеpтания (метод обоpoтнeй)</dt>
+					<dd>— один из метoдов тeкcтoвoй cтегонагpaфии, идeя кoтoрогo оcнoвaнa нa двyх фактах:
+						<ol>
+							<li>любoй символ предстaвляeт cобoю пocлeдoвaтeльность битoв, в сooтвeтcтвии c кодировкой <a onclick="$('#ascii').trigger('click')" >ASCII</a>.</li>
+							<li>нeкoторые cимвoлы, пpeдстaвлeнныe в pyccком и английcком aлфaвитax, внешнe неoтличимы. см. <a onclick="$('#allObs').trigger('click')" >oбopoтни</a>.
+						</ol>
+						— заключаeтся в пoдмeнe (еcли бит=1) или отказе oт тaкoй подмены (еcли бит = 0) рyccкoгo обopотня английcким (или наоборот).
+					</dd>						
+			</dl>
+		</div>
+	</div>
+</div>
+<script src="js/jquery.js"></script>
+<script src="js/qtip.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
